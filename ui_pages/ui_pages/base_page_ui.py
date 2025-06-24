@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 
-class BasePageActivity(BaseDriver):
+class BasePageUi(BaseDriver):
     """
     Base page activity
     """
@@ -18,7 +18,7 @@ class BasePageActivity(BaseDriver):
     def loaded(self):
         """
         Use to check if the page is loaded
-        must be implemented in all pages
+        must be implemented in all logins
         """
         raise NotImplementedError(f"'loaded' property is not implemented in {self.__class__}")
 
@@ -27,7 +27,7 @@ class BasePageActivity(BaseDriver):
         """
         :return: WebDriverWait property
         """
-        return WebDriverWait(driver=self.driver, timeout=self.timeout)
+        return WebDriverWait(self.driver, self.timeout)
 
     @property
     def title_text(self):
@@ -42,5 +42,4 @@ class BasePageActivity(BaseDriver):
             title = self.wait.until(EC.visibility_of_element_located(locator)).text.strip()
             return title
         except (NoSuchElementException, ElementNotVisibleException):
-            print("Title does not exist in the current page")
             return None

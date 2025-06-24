@@ -1,26 +1,30 @@
+import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from web_automation_framework.pages.base_page import BasePage
-from ..ui_pages.activities.login_page_activity import LoginPageActivity
+from web_automation_framework.tests.base_test import BaseTest
+from web_automation_framework.ui_pages.ui_pages.login_page_ui import LoginPageUi
+from web_automation_framework.ui_pages.ui_pages.secure_page_ui import SecurePageUi
 
 
-class LoginPage(BasePage):
+class LoginBaseTest(BaseTest):
     """
     Class for login page
     """
-    def __init__(self, driver):
-        """
-        LoginPage constructor
-        """
-        super().__init__(driver)
+    INVALID_USER = "asd@123"
+    INVALID_PWD = "asd@123"
+    VALID_USER = "tomsmith"
+    VALID_PWD = "SuperSecretPassword!"
 
-    def navigate_login_page(self) -> LoginPageActivity:
+    @pytest.fixture(autouse=True)
+    def setup_login(self, driver):
+        self.login_page_ui = LoginPageUi(driver)
+
+    def navigate_login_page(self) -> LoginPageUi:
         """
         Method to navigate login screen
         :return: None
         """
         self.driver.get("https://the-internet.herokuapp.com/login")
-        return LoginPageActivity(driver=self.driver)
 
     def set_username(self, username) -> None:
         """
@@ -28,7 +32,7 @@ class LoginPage(BasePage):
         :param username: str
         :return: None
         """
-        self.driver.find_element(By.ID, "username").send_keys(username)
+        self.find(*self.login_page_ui.username_locator).send_keys(username)
 
     def set_password(self, password) -> None:
         """
@@ -36,18 +40,19 @@ class LoginPage(BasePage):
         :param password: str
         :return: None
         """
-        self.driver.find_element(By.ID, "password").send_keys(password)
+        self.find(*self.login_page_ui.password_locator).send_keys(password)
 
-    def click_login(self)  -> None:
+    def click_login(self):
         """
         Method to find and click in login button
         :return: None
         """
-        self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
+        self.click(*self.login_page_ui.button_locator)
+        return SecurePageUi(self.driver)
 
     def get_flash_message(self) -> str:
         """
         Method to find and get the flash message displayed after click on login button
         :return: str with the text of flash message
         """
-        return self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "div[id='flash'].flash"))).text
+        return self.find(*self.login_page_ui.flash_message).text
