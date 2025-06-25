@@ -18,7 +18,7 @@ class SecurePageUi(BasePageUi):
     @property
     def loaded(self):
         """
-        Use to check if login page is loaded
+        Use to check if secure page is loaded
         :return: bool
         """
         try:

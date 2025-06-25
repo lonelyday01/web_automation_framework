@@ -7,7 +7,7 @@ class LoginPageUi(BasePageUi):
     """
     Class for Login Page UI
     """
-    LBL_LOGIN_TITLE_PAGE = "Login Page"
+    LBL_LOGIN_PAGE_TITLE = "Login Page"
     LBL_LOGIN_BTN = "Login"
     LBL_INVALID_USER_MESSAGE = "Your username is invalid!"
     LBL_INVALID_PASSWORD_MESSAGE = "Your password is invalid!"
@@ -28,6 +28,6 @@ class LoginPageUi(BasePageUi):
         :return: bool
         """
         try:
-            return self.LBL_LOGIN_TITLE_PAGE == self.title_text
+            return self.LBL_LOGIN_PAGE_TITLE == self.title_text
         except NoSuchElementException:
             return False
