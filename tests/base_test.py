@@ -51,7 +51,7 @@ class BaseTest:
         """
         self.wait.until(EC.element_to_be_clickable((by, locator))).click()
 
-    def get_text(self, by, locator) -> str:
+    def get_text(self, by, locator):
         """
         Gets text of a 'WebElement'
         :param by: (xpath, ID, CCS_locator, etc.)
