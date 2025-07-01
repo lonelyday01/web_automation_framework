@@ -19,6 +19,7 @@ class LoginPageUi(BasePageUi):
         self.password_locator = (By.ID, "password")
         self.button_locator = (By.CSS_SELECTOR, "button[type='submit']")
         self.flash_message = (By.CSS_SELECTOR, "div[id='flash'].flash")
+        self.login_btn_color = "#2ba6cb"
         super().__init__(driver)
 
     @property

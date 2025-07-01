@@ -1,9 +1,10 @@
 import pytest
-from selenium.common import NoSuchElementException, ElementNotVisibleException
+from selenium.common import NoSuchElementException, ElementNotVisibleException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.color import Color
 
 
 class BaseTest:
@@ -53,12 +54,20 @@ class BaseTest:
 
     def get_text(self, by, locator):
         """
-        Gets text of a 'WebElement'
+        Gets text of a 'WebElement' based in its locator
         :param by: (xpath, ID, CCS_locator, etc.)
         :param locator: str locator of the elements to find
         :return: str
         """
         return self.wait.until(EC.visibility_of_element_located((by, locator)))
+
+    def get_element_text(self, web_element: WebElement):
+        """
+        Gets text of a 'WebElement'
+        :param web_element:
+        :return: str
+        """
+        return web_element.text or web_element.get_attribute("value")
 
     def is_displayed(self, by, locator) -> bool:
         """
@@ -72,3 +81,43 @@ class BaseTest:
             return True
         except (NoSuchElementException, ElementNotVisibleException):
             return False
+
+    def get_url(self):
+        """
+        Gets current URL
+        :return: str
+        """
+        return self.driver.current_url
+
+    def verify_url(self, url):
+        """
+        Verify the current url with expected
+        :param url: str
+        :return: bool
+        """
+        try:
+            self.wait.until(EC.url_contains(url))
+            return True
+        except NoSuchElementException:
+            return False
+
+    def get_color(self, web_element: WebElement):
+        """
+        Gets color of a WebElement
+        :param web_element:
+        :return: color
+        """
+        try:
+            return Color.from_string(self.wait.until(EC.element_to_be_clickable(web_element)).value_of_css_property("background-color"))
+        except TimeoutException:
+            return None
+
+    @staticmethod
+    def convert_rgb_color_to_hexa(color):
+        """
+        Convert from rgb format to a hexadecimal format
+        :param color: list
+        :return:
+        """
+        r, g, b, _ = color
+        return f"#{r:02X}{g:02X}{b:02X}"

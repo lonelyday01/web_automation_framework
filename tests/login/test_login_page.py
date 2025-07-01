@@ -1,6 +1,5 @@
 from web_automation_framework.tests.login.login_base_test import LoginBaseTest
 
-
 class TestLoginPage(LoginBaseTest):
     """
     Class to validate all the resources in LoginPage
@@ -13,6 +12,8 @@ class TestLoginPage(LoginBaseTest):
         assert self.login_page_ui.loaded, "Login Page is not loaded"
         self.set_username(self.VALID_USER)
         self.set_password(self.VALID_PWD)
+        color = self.get_color(self.find(*self.login_page_ui.button_locator))
+        assert self.login_page_ui.login_btn_color == color.hex, "Color button is different "
         secure_ui = self.click_login()
         assert secure_ui.loaded, "Secure Page is not loaded"
         assert self.is_displayed(*self.login_page_ui.flash_message), "Flash message is not displayed"
